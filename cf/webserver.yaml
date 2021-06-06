@@ -1,7 +1,7 @@
 AWSTemplateFormatVersion: 2010-09-09
 Description: >-
-  AWS CloudFormation Sample Template for a basic website hosting on AWS
-  installs a highly-available, scalable Apache webserver deployment 
+  AWS CloudFormation Sample Template for a basic website hosting on AWS.
+  installs a highly-available, scalable Apache webserver deployment.
   **WARNING** 
   This template creates an Amazon EC2 instance, an Application Load Balancer.
   You will be billed for the AWS resources used if you create a stack from this template.
@@ -62,6 +62,10 @@ Resources:
           FromPort: '80'
           ToPort: '80'
           CidrIp: !Ref ALBAccessLocation
+        - IpProtocol: tcp
+          FromPort: '443'
+          ToPort: '443'
+          CidrIp: !Ref ALBAccessLocation      
       VpcId: !Ref VpcId
   ApplicationLoadBalancer:
     Type: 'AWS::ElasticLoadBalancingV2::LoadBalancer'
