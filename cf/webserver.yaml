@@ -183,16 +183,12 @@ Resources:
            trap '/opt/aws/bin/cfn-signal --exit-code 1 --resource WebServerGroup --region ${AWS::Region} --stack ${AWS::StackName}' ERR
            yum install -y httpd
            service httpd start
-           #Replace below with your website content
-           echo "Hello World from $(hostname -f)" > /var/www/html/index.html
+           #Replace below with your website content#(e.g. copy from S3)
+           echo "<h2> Hello from EC2! </h2> <br> <i>$(hostname -f)</i> </br>" > /var/www/html/index.html
            /opt/aws/bin/cfn-signal --exit-code 0 --resource WebServerGroup --region ${AWS::Region} --stack ${AWS::StackName}
   
+  
 Outputs:
-  WebsiteURL:
-    Value: !Join 
-      - ''
-      - - 'http://'
-        - !GetAtt 
-          - ApplicationLoadBalancer
-          - DNSName
-    Description: URL to your website
+  URL:
+    Description: Application URL
+    Value: !GetAtt ApplicationLoadBalancer.DNSName
