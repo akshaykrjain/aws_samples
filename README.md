@@ -1,8 +1,7 @@
 
 # Sample Cloud Projects 
 
-A brief description of what this project does and who it's for
-
+Terraform/CFT/CDK/SDK Samples for AWS. 
 
 ## Deployment of CloudFormation
 
@@ -18,6 +17,8 @@ aws cloudformation deploy --stack-name mystack --template-file ./cf/<file_name>.
     
 ## Support
 
-For support, email fake@fake.com or join our Slack channel.
+For getting help or reporting bug pls raise an github issue. 
+
+_PRs are welcome._
 
   
