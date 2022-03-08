@@ -53,7 +53,7 @@ resource "aws_security_group" "allow_ssh" {
   }
 }
 
-# Request a spot instance at $0.03
+# Request a one-time spot instance
 resource "aws_spot_instance_request" "cheap_worker" {
   ami                    = data.aws_ami.ubuntu.id
   instance_type          = "t4g.micro"
