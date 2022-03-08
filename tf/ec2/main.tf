@@ -1,9 +1,14 @@
+variable "key_pair_name" {
+  type    = string
+  default = "akshay"
+}
+
 data "aws_ami" "ubuntu" {
   most_recent = true
 
   filter {
     name   = "name"
-    values = ["ubuntu/images/hvm-ssd/ubuntu-focal-20.04-amd64-server-*"]
+    values = ["ubuntu/images/hvm-ssd/ubuntu-focal-20.04-arm64-server-*"]
   }
 
   filter {
@@ -14,20 +19,50 @@ data "aws_ami" "ubuntu" {
   owners = ["099720109477"] # Canonical
 }
 
-resource "aws_instance" "web" {
-  ami           = data.aws_ami.ubuntu.id
-  instance_type = "t3.micro"
-  count = 3
+data "aws_vpc" "default" {
+  default = true
+}
+
+data "http" "myip" {
+  url = "http://ipv4.icanhazip.com"
+}
+
+resource "aws_security_group" "allow_ssh" {
+  name        = "allow_tls"
+  description = "Allow SSH inbound traffic"
+  vpc_id      = data.aws_vpc.default.id
+
+  ingress {
+    description = "SSH from My IP"
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
+    cidr_blocks = ["${chomp(data.http.myip.body)}/32"]
+  }
+
+  egress {
+    from_port        = 0
+    to_port          = 0
+    protocol         = "-1"
+    cidr_blocks      = ["0.0.0.0/0"]
+    ipv6_cidr_blocks = ["::/0"]
+  }
+
   tags = {
-    Name = "WebServer"
+    Name = "allow_ssh_my_ip"
   }
 }
 
-resource "aws_instance" "app" {
-  ami           = data.aws_ami.ubuntu.id
-  instance_type = "t2.micro"
-  count = 2
+resource "aws_instance" "web" {
+  ami                    = data.aws_ami.ubuntu.id
+  instance_type          = "t4g.micro"
+  key_name               = var.key_pair_name
+  vpc_security_group_ids = [aws_security_group.allow_ssh.id]
   tags = {
-    Name = "AppServer"
+    Name = "Test"
   }
+}
+
+output "ssh_command" {
+  value = "ssh -i ~/.ssh/${var.key_pair_name}.pem ubuntu@${aws_instance.web.public_ip}"
 }
