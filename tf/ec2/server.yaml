@@ -1,0 +1,18 @@
+#cloud-config
+apt_upgrade: true
+
+packages:
+  - apache2
+
+write_files:
+  - owner: root:root
+    path: /var/www/html/index.html
+    permissions: "0644"
+    content: |
+      <h1>Hei, NEP!</h1>
+      <h2>Good Evening!</h2>
+
+runcmd:
+  - |
+    #!/bin/bash
+    echo "Welcome to webserver"
