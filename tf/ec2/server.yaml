@@ -10,7 +10,7 @@ write_files:
     permissions: "0644"
     content: |
       <h1>Hei, NEP!</h1>
-      <h2>Good Evening!</h2>
+      <h2>Good Morning :) </h2>
 
 runcmd:
   - |
