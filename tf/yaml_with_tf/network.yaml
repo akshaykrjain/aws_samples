@@ -1,0 +1,32 @@
+---
+global:
+  aws:
+    global_cidr_ranges:
+      - 10.0.0.0/8
+    vpcs:
+      - vpc_name: backend_dev
+        vpc_region: eu-west-1
+        account_name: my_account_1
+        aws_account_number: 67715653623
+        vpc_cidr: 10.10.0.0/16
+        private_subnet_cidrs:
+          - 10.10.0.0/16
+          - 10.10.0.0/16
+          - 10.10.0.0/16
+        public_subnet_cidrs:
+          - 10.10.0.0/16
+          - 10.10.0.0/16
+          - 10.10.0.0/16
+      - vpc_name: backend_prod
+        vpc_region: eu-west-1
+        account_name: my_account_2
+        aws_account_number: 67815653624
+        vpc_cidr: 10.20.0.0/16
+        private_subnet_cidrs:
+          - 10.20.0.0/16
+          - 10.20.0.0/16
+          - 10.20.0.0/16
+        public_subnet_cidrs:
+          - 10.20.0.0/16
+          - 10.20.0.0/16
+          - 10.20.0.0/16
