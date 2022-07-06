@@ -1,0 +1,1 @@
+# EKS K8S Cluster with managed nodegroup (bottlerocket ARM64)
