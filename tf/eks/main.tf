@@ -12,6 +12,13 @@ provider "kubernetes" {
   token                  = data.aws_eks_cluster_auth.eks_auth.token
 }
 
+provider "helm" {
+  kubernetes {
+  host                   = module.eks.cluster_endpoint
+  cluster_ca_certificate = base64decode(module.eks.cluster_certificate_authority_data)
+  token                  = data.aws_eks_cluster_auth.eks_auth.token
+}
+}
 locals {
   name            = "dev"
   cluster_version = "1.22"
@@ -498,4 +505,17 @@ resource "aws_autoscaling_group_tag" "cluster_autoscaler_label_tags" {
 
     propagate_at_launch = false
   }
+}
+
+
+
+module "cluster_autoscaler" {
+  source = "git::https://github.com/DNXLabs/terraform-aws-eks-cluster-autoscaler.git"
+
+  enabled = true
+
+  cluster_name                     = module.eks.cluster_id
+  cluster_identity_oidc_issuer     = module.eks.cluster_oidc_issuer_url
+  cluster_identity_oidc_issuer_arn = module.eks.oidc_provider_arn
+  aws_region                       = local.region
 }
