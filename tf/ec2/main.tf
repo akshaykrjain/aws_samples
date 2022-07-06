@@ -73,12 +73,43 @@ resource "aws_security_group_rule" "http_allow" {
   security_group_id = aws_security_group.web_server.id
 }
 
+
+resource "aws_iam_role" "ec2_instance" {
+  name               = "ec2_instance_role"
+  assume_role_policy = <<POLICY
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Principal": {
+        "Service": "ec2.amazonaws.com"
+      },
+      "Action": "sts:AssumeRole"
+    }
+  ]
+}
+POLICY
+}
+
+resource "aws_iam_role_policy_attachment" "attach_ssm" {
+  policy_arn = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
+  role       = aws_iam_role.ec2_instance.name
+}
+
+resource "aws_iam_instance_profile" "ec2_instance_profile" {
+  name = "ec2-instance-profile"
+  role = aws_iam_role.ec2_instance.name
+}
+
+
 resource "aws_instance" "web" {
-  ami                    = data.aws_ami.ubuntu.id
-  instance_type          = "t4g.medium"
-  key_name               = var.key_pair_name
-  vpc_security_group_ids = [aws_security_group.web_server.id]
-  user_data              = data.cloudinit_config.server_config.rendered
+  ami                         = data.aws_ami.ubuntu.id
+  instance_type               = "t4g.medium"
+  iam_instance_profile        = aws_iam_instance_profile.ec2_instance_profile.name
+  key_name                    = var.key_pair_name
+  vpc_security_group_ids      = [aws_security_group.web_server.id]
+  user_data                   = data.cloudinit_config.server_config.rendered
   user_data_replace_on_change = true
   tags = {
     Name = "WebServer-Ubuntu"
