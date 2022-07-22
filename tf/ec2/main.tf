@@ -132,3 +132,10 @@ resource "aws_instance" "web" {
 output "WEB_ADDRESS" {
   value = "http://${aws_instance.web.public_ip}"
 }
+
+
+output "ssh" {
+
+  value = "ssh -i ~/.ssh/id_rsa ubuntu@${aws_instance.web.public_ip}"
+
+}
