@@ -1,5 +1,5 @@
 
-# Sample Cloud Projects 
+# Sample  AWS Cloud Projects 
 
 Terraform/CFT/CDK/SDK Samples for AWS. 
 
@@ -14,6 +14,12 @@ aws cloudformation deploy --stack-name mystack --template-file ./cf/<file_name>.
   
 ![Logo](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/th5xamgrr6se0x5ro4g6.png)
 
+
+## Deployment of Terraform
+
+`terraform init`
+
+`terraform apply`
     
 ## Support
 
