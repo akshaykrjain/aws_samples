@@ -21,7 +21,7 @@ provider "helm" {
 }
 locals {
   name            = "dev"
-  cluster_version = "1.22"
+  cluster_version = "1.23"
   region          = "eu-west-1"
   tags = {
     Example    = local.name
