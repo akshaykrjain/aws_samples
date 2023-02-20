@@ -110,6 +110,11 @@ resource "aws_iam_role_policy_attachment" "attach_ssm" {
   role       = aws_iam_role.ec2_instance.name
 }
 
+resource "aws_iam_role_policy_attachment" "attach_admin" {
+  policy_arn = "arn:aws:iam::aws:policy/AdministratorAccess"
+  role       = aws_iam_role.ec2_instance.name
+}
+
 resource "aws_iam_instance_profile" "ec2_instance_profile" {
   name = "ec2-instance-profile"
   role = aws_iam_role.ec2_instance.name
@@ -117,7 +122,7 @@ resource "aws_iam_instance_profile" "ec2_instance_profile" {
 
 
 resource "aws_instance" "web" {
-  ami                         = data.aws_ami.ubuntu.id
+  ami                         = data.aws_ami.amzn2.id
   instance_type               = "t4g.medium"
   iam_instance_profile        = aws_iam_instance_profile.ec2_instance_profile.name
   key_name                    = var.key_pair_name
@@ -136,6 +141,6 @@ output "WEB_ADDRESS" {
 
 output "ssh" {
 
-  value = "ssh -i ~/.ssh/id_rsa ubuntu@${aws_instance.web.public_ip}"
+  value = "ssh -i ~/.ssh/id_rsa ec2-user@${aws_instance.web.public_ip}"
 
 }
