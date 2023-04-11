@@ -76,10 +76,19 @@ resource "aws_security_group_rule" "ssh_allow" {
   security_group_id = aws_security_group.web_server.id
 }
 
+resource "aws_security_group_rule" "vnc_allow" {
+  type              = "ingress"
+  from_port         = 5901
+  to_port           = 5901
+  protocol          = "tcp"
+  cidr_blocks       = ["${chomp(data.http.myip.body)}/32"]
+  security_group_id = aws_security_group.web_server.id
+}
+
 resource "aws_security_group_rule" "http_allow" {
   type              = "ingress"
-  from_port         = 80
-  to_port           = 80
+  from_port         = 1337
+  to_port           = 1337
   protocol          = "tcp"
   cidr_blocks       = ["0.0.0.0/0"]
   ipv6_cidr_blocks  = ["::/0"]
@@ -122,8 +131,8 @@ resource "aws_iam_instance_profile" "ec2_instance_profile" {
 
 
 resource "aws_instance" "web" {
-  ami                         = data.aws_ami.amzn2.id
-  instance_type               = "t4g.medium"
+  ami                         = data.aws_ami.ubuntu.id
+  instance_type               = "t4g.large"
   iam_instance_profile        = aws_iam_instance_profile.ec2_instance_profile.name
   key_name                    = var.key_pair_name
   vpc_security_group_ids      = [aws_security_group.web_server.id]
@@ -141,6 +150,6 @@ output "WEB_ADDRESS" {
 
 output "ssh" {
 
-  value = "ssh -i ~/.ssh/id_rsa ec2-user@${aws_instance.web.public_ip}"
+  value = "ssh -i ~/.ssh/id_rsa ubuntu@${aws_instance.web.public_ip}"
 
 }

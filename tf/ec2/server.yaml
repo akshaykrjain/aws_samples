@@ -2,14 +2,15 @@
 apt_upgrade: true
 
 packages:
-  - apache2
-  - httpd
-  - docker
+  - curl
+  - wget
+  - node
+  - npm
 
 write_files:
   - owner: root:root
     path: /var/www/html/index.html
-    permissions: "0644"
+    permissions: '0644'
     content: |
       <h1>Hei, NEP!</h1>
       <h2>Good Morning :) </h2>
@@ -18,6 +19,12 @@ runcmd:
   - |
     #!/bin/bash
     echo "Welcome to webserver"
-    sudo systemctl enable docker.service
-    sudo systemctl start docker.servi
-    sudo usermod -a -G docker ec2-user
+    sudo apt update
+    #curl -X POST --data-urlencode "payload={\"channel\": \"#crap\", \"username\": \"webhookbot\", \"text\": \"START EC2 USERDATA CONFIG `$(time)`\", \"icon_emoji\": \":ghost:\"}" https://hooks.slack.com/services/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
+    curl -fsSL https://get.docker.com -o get-docker.sh
+    sudo sh get-docker.sh
+    sudo usermod -aG docker ubuntu
+    #sudo apt install -y ubuntu-desktop
+    #sudo apt install -y tightvncserver
+    #sudo apt install -y gnome-panel gnome-settings-daemon metacity nautilus gnome-terminal
+    #curl -X POST --data-urlencode "payload={\"channel\": \"#crap\", \"username\": \"webhookbot\", \"text\": \"FINISH EC2 USERDATA CONFIG `$(time)`\", \"icon_emoji\": \":ghost:\"}" https://hooks.slack.com/services/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
